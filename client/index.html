@@ -4,6 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ami-chat</title>
+    <script type="module">
+        import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
+
+        const socket = io()
+
+        const form = document.getElementById('form')
+        const input = document.getElementById('input')
+        const messages = document.getElementById('messages')
+
+        socket.on('chat message', (msg) => {
+            const item = `<li>${msg}</li>`
+            messages.insertAdjacentHTML('beforeend', item)
+        })
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+
+            if (input.value) {
+                socket.emit('chat message', input.value)
+                input.value = ''
+            }
+        })
+    </script>
     <style>
         *,
         *::before,
@@ -21,9 +44,23 @@
             display: grid;
             place-content: center;
             height: 100vh;
-            padding: 36px;
+            padding: 36px 36px 100px 36px;
             grid-template-rows: 1fr;
         }
+
+        #messages{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages > li {
+            padding: .5rem 1 rem;
+        }
+
+        #messages > li:nth-child(odd){
+            background: #2a2a2a;
+        } 
 
         #chat {
             border: 1px solid #ccc;
@@ -33,10 +70,45 @@
             height: 100%;
             position: relative;
         }
+
+        #form {
+            bottom: 0;
+            display: flex;
+            height: 48px;
+            left: 0;
+            padding: 4px;
+            position: absolute;
+            right: 0;
+        }
+
+        #input {
+            border-radius: 9999px;
+            border: 1px solid #eee;
+            flex: 1;
+            margin: 4px;
+            padding: 0 8px;
+        }
+
+        #input:focus {
+            outline: 0;
+        }
+
+        #form > button {
+            background: #09f;
+            color: #fff;
+            border: 0;
+            margin: 4px;
+            border-radius: 4px;
+        }
+
+        #from > button:hover {
+            background: #0cf;
+        }
     </style>
 </head>
 <body>
     <section id="chat">
+        <ul id="messages"></ul>
         <form id="form">
             <input type="text" name="message" id="input" placeholder="Escribe tu mensaje" autocomplete="off" />
             <button type="submit">Enviar</button>
