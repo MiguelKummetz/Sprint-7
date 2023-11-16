@@ -11,7 +11,7 @@ import {
   InterServerEvents,
   ServerToClientEvents,
   SocketData
-} from '../../domain/entities/ISocket';
+} from '../../core/domain/entieies/ISocket';
 
 dotenv.config();
 const port = process.env.PORT ?? 3000;
@@ -54,8 +54,8 @@ io.on('connection', async (socket) => {
     const username = socket.handshake.auth.username ?? 'anonymous';
     try {
       result = await db.execute({
-        sql: 'INSERT INTO messages VALUES (:msg, :username)',
-        args: { msg }
+        sql: 'INSERT INTO messages (content, username) VALUES (:msg, :username)',
+        args: { msg, username }
       });
     } catch (error) {
       console.error(error);
@@ -66,8 +66,8 @@ io.on('connection', async (socket) => {
     }
   });
 
-  console.log('auth ⬇');
-  console.log(socket.handshake.auth);
+  // console.log('auth ⬇');
+  // console.log(socket.handshake.auth);
 
   if (!socket.recovered) {
     try {
@@ -77,9 +77,14 @@ io.on('connection', async (socket) => {
       });
 
       results.rows.forEach((row) => {
-        socket.emit('chat message', row.content, row.id?.toString());
+        socket.emit(
+          'chat message',
+          row.content,
+          row.id?.toString(),
+          row.username
+        );
       });
-      console.log(results);
+      // console.log(results);
     } catch (error) {
       console.error(error);
       return;
@@ -90,7 +95,7 @@ io.on('connection', async (socket) => {
 app.use(logger('dev'));
 
 app.get('/', (_req: Request, res: any) => {
-  res.sendFile(process.cwd() + '/client/index.html');
+  res.sendFile(process.cwd() + '/client/index.html'); //////////////////////////////////////
 });
 
 server.listen(port, () => {
