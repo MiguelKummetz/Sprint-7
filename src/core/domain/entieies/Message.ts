@@ -2,9 +2,9 @@ export default class Message {
   private idMessage: number | undefined;
   private userId: number;
   private content: string;
-  private date: Date;
+  private date: Date | undefined;
 
-  constructor(userId: number, content: string, date: Date) {
+  constructor(userId: number, content: string, date?: Date) {
     this.userId = userId;
     this.content = content;
     this.date = date;
@@ -22,7 +22,7 @@ export default class Message {
     return this.content;
   }
 
-  getDate(): Date {
+  getDate(): Date | undefined {
     return this.date;
   }
 

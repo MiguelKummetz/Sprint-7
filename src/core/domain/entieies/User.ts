@@ -2,9 +2,9 @@ export default class User {
   private idUser: number | undefined;
   private username: string;
   private password: string;
-  private date: Date;
+  private date: Date | undefined;
 
-  constructor(username: string, password: string, date: Date) {
+  constructor(username: string, password: string, date?: Date) {
     this.username = username;
     this.password = password;
     this.date = date;
@@ -22,7 +22,7 @@ export default class User {
     return this.password;
   }
 
-  getDate(): Date {
+  getDate(): Date | undefined {
     return this.date;
   }
 
