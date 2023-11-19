@@ -31,6 +31,8 @@ const db = createClient({
   authToken: process.env.DB_TOKEN
 });
 
+app.use(express.json());
+app.use('/api/users', userRouter);
 ///////////////////////////////////////////////////
 
 import { gameRouter } from '../application/routes/GameRoutes';
@@ -38,6 +40,7 @@ import { GameRepositoriesImpl } from '../infrastructure/repositories/GameReposit
 import { playerRouter } from '../application/routes/PlayerRoutes';
 import { PlayerRepositoriesImpl } from '../infrastructure/repositories/PlayerRepositoriesImpl';
 import { rankingRouter } from '../application/routes/RankingRoutes';
+import { userRouter } from '../application/routes/UserRoutes';
 
 const app = express();
 dotenv.config();
